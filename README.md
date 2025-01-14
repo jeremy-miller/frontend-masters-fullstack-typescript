@@ -1,15 +1,49 @@
-# Fullstack Typescript (featuring GraphQL and Node.js)
+# Full Stack TypeScript [![CI](https://github.com/mike-north/full-stack-ts/actions/workflows/ci.yml/badge.svg)](https://github.com/mike-north/full-stack-ts/actions/workflows/ci.yml)
 
-Code for the Frontend Masters [Fullstack Typescript](https://frontendmasters.com/courses/fullstack-typescript/) course.
+Mike North's Full Stack TypeScript course
+
+- Video: [Frontend Masters](https://frontendmasters.com/workshops/fullstack-typescript/)
+- Course website: [TypeScript Training: Full Stack TypeScript](https://www.typescript-training.com/course/full-stack-typescript)
 
 ## Setup
 
-- Install Node.js version `14.19.1`
-- Install [yarn](https://yarnpkg.com/): `npm install -g yarn`
-- Change directory into `full-stack-ts` and install dependencies: `cd full-stack-ts && yarn`
-- While in the `full-stack-ts` directory, build the project: `yarn build`
+First, if you want to ensure you're using the correct Node.js and package manager versions, [install Volta](http://volta.sh)
 
-## Run
+```sh
+# install Volta
+curl https://get.volta.sh | bash
 
-1. Start the dev server: `cd full-stack-ts && yarn dev`
-2. Browse to [http://localhost:1234](http://localhost:1234)
+# install Node
+volta install node
+```
+
+Then, check out a local copy of this repository
+
+```sh
+git clone git@github.com:mike-north/full-stack-ts
+cd full-stack-typescript
+```
+
+Next, install the project dependencies
+
+```sh
+yarn
+```
+
+Build the project for the first time
+
+```sh
+yarn build
+```
+
+And finally, start the project
+
+```sh
+yarn dev
+```
+
+After the client and server build processes complete, you should see an "imitation Twitter" running on [http://localhost:1234](http://localhost:1234).
+
+## Legal
+
+&copy; 2022 Mike North, all rights reserved.
