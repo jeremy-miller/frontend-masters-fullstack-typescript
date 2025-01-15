@@ -1,17 +1,39 @@
+import { gql } from '@apollo/client';
 import {
   faComment,
   faHeart as faHeartHollow,
 } from '@fortawesome/free-regular-svg-icons';
 import {
   faEllipsisH,
-  faRetweet,
   faHeart as faHeartSolid,
+  faRetweet,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { formatDistanceToNow } from 'date-fns';
 import * as React from 'react';
+import { GET_CURRENT_USER } from './App';
+import {
+  useCreateFavoriteMutation,
+  useDeleteFavoriteMutation,
+} from './generated/graphql';
+import { GET_TIMELINE_TWEETS } from './Timeline';
 import TweetMessage from './TweetMessage';
 import { humanFriendlyNumber } from './utils/number';
+
+export const CREATE_FAVORITE = gql`
+  mutation CreateFavorite($favorite: FavoriteInput!) {
+    createFavorite(favorite: $favorite) {
+      id
+    }
+  }
+`;
+export const DELETE_FAVORITE = gql`
+  mutation DeleteFavorite($favorite: FavoriteInput!) {
+    deleteFavorite(favorite: $favorite) {
+      id
+    }
+  }
+`;
 
 export interface TweetProps {
   currentUserId: string;
@@ -33,7 +55,7 @@ export interface TweetProps {
 
 const Tweet: React.FC<TweetProps> = ({ tweet, currentUserId }) => {
   const {
-    id: _id,
+    id: id,
     message,
     createdAt,
     favoriteCount,
@@ -42,11 +64,39 @@ const Tweet: React.FC<TweetProps> = ({ tweet, currentUserId }) => {
     isFavorited,
     author: { name, handle, avatarUrl },
   } = tweet;
+
+  const [createFavorite, { error: createFavoriteError }] =
+    useCreateFavoriteMutation({
+      variables: {
+        favorite: { tweetId: id, userId: currentUserId },
+      },
+      refetchQueries: [GET_TIMELINE_TWEETS, GET_CURRENT_USER],
+    });
+  const [deleteFavorite, { error: deleteFavoriteError }] =
+    useDeleteFavoriteMutation({
+      variables: {
+        favorite: { tweetId: id, userId: currentUserId },
+      },
+      refetchQueries: [GET_TIMELINE_TWEETS, GET_CURRENT_USER],
+    });
+  if (createFavoriteError) {
+    return <p>Error creating favorite: {createFavoriteError.message}</p>;
+  }
+  if (deleteFavoriteError) {
+    return <p>Error deleting favorite: {deleteFavoriteError.message}</p>;
+  }
+
   const handleFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (
     _evt
   ) => {
-    if (isFavorited) console.log('Unfavorite', { tweet, currentUserId });
-    else console.log('Favorite', { tweet, currentUserId });
+    if (isFavorited)
+      deleteFavorite().catch((err) =>
+        console.error('error while deleting favorite', err)
+      );
+    else
+      createFavorite().catch((err) =>
+        console.error('error while creating favorite', err)
+      );
   };
 
   return (
