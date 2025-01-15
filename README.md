@@ -43,7 +43,3 @@ yarn dev
 ```
 
 After the client and server build processes complete, you should see an "imitation Twitter" running on [http://localhost:1234](http://localhost:1234).
-
-## Legal
-
-&copy; 2022 Mike North, all rights reserved.
